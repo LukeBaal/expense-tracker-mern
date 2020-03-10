@@ -78,13 +78,23 @@ label {
 }
 
 input[type='text'],
-input[type='number'] {
+input[type='number'],
+select {
   border: 1px solid #dedede;
   border-radius: 2px;
   display: block;
   font-size: 16px;
   padding: 10px;
   width: 100%;
+}
+
+.form-group.inline {
+  display: flex;
+}
+
+.form-group.inline select {
+  width: 50%;
+  margin-left: 2em;
 }
 
 .btn {

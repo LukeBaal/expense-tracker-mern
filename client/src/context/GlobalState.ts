@@ -1,20 +1,40 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, ReactNode, ReactElement } from 'react';
 import AppReducer from './AppReducer';
 import axios from 'axios';
 
+interface Transaction {
+  _id: string,
+  text: string,
+  date: Date,
+  createAt: Date
+}
+
+interface GlobalState {
+  transactions: Transaction[],
+  error: string | null,
+  loading: boolean
+}
+
+interface GlobalContextProps {
+  defaults?: Partial<GlobalState>,
+  children?: ReactNode
+}
+
 // Initial state
-const initialState = {
+const initialState: GlobalState = {
   transactions: [],
   error: null,
   loading: true
 }
 
 // Create context
-export const GlobalContext = createContext(initialState);
+export const GlobalContext = createContext<GlobalState>(initialState);
+
+export const useGlobalContext = (): GlobalState =?
 
 // Provider component
-export const GlobalProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AppReducer, initialState);
+export const GlobalProvider: any = (props: GlobalContextProps): ReactElement => {
+  const [state, dispatch]: [any, any] = useReducer(AppReducer, initialState);
 
   // Actions
   async function getTransactions() {
@@ -33,7 +53,7 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function deleteTransaction(id) {
+  async function deleteTransaction(id: string) {
     try {
       await axios.delete(`/api/v1/transactions/${id}`);
 
@@ -49,7 +69,7 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function addTransaction(transaction) {
+  async function addTransaction(transaction: Transaction) {
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -79,6 +99,6 @@ export const GlobalProvider = ({ children }) => {
     deleteTransaction,
     addTransaction
   }}>
-    {children}
+    {props.children}
   </GlobalContext.Provider>);
 }
