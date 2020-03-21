@@ -21,8 +21,12 @@ export const Transaction = ({ transaction }) => {
       <button
         onClick={() => deleteTransaction(transaction._id)}
         className="delete-btn"
+        style={{
+          borderTopLeftRadius: '4px',
+          borderBottomLeftRadius: '4px'
+        }}
       >
-        x
+        <i className="far fa-trash-alt"></i>
       </button>
     </li>
   );

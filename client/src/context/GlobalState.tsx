@@ -12,6 +12,7 @@ const initialState: GlobalState = {
   transactions: [],
   error: null,
   loading: true,
+  setLoading: () => null,
   getTransactions: (filter: DateFilter) => null,
   addTransaction: (transaction: Transaction) => {},
   deleteTransaction: (id: string) => {}
@@ -29,6 +30,12 @@ export const GlobalProvider: any = (props: GlobalContextProps): any => {
     initialState
   );
 
+  function setLoading() {
+    dispatch({
+      type: 'LOADING'
+    });
+  }
+
   // Actions
   async function getTransactions(filter: DateFilter): Promise<void> {
     try {
@@ -43,7 +50,7 @@ export const GlobalProvider: any = (props: GlobalContextProps): any => {
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
-        payload: err.response.data.error
+        payload: 'ERROR' //err.response.data.error
       });
     }
   }
@@ -92,6 +99,7 @@ export const GlobalProvider: any = (props: GlobalContextProps): any => {
         transactions: state.transactions,
         error: state.error,
         loading: state.loading,
+        setLoading,
         getTransactions,
         deleteTransaction,
         addTransaction

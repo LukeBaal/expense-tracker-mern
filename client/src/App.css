@@ -92,9 +92,24 @@ select {
   display: flex;
 }
 
+.form-group.inline i {
+  margin-top: 0.3em;
+}
+
 .form-group.inline select {
-  width: 50%;
-  margin-left: 2em;
+  width: 20%;
+  margin-left: 0.3em;
+}
+
+.form-group.inline.right {
+  justify-content: flex-end;
+}
+
+.form-group.inline.right select {
+  font-size: 14px;
+  height: 2em;
+  width: 3.5em;
+  padding: 0;
 }
 
 .btn {

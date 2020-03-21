@@ -1,6 +1,5 @@
-const { db } = require('../server');
+const Transaction = require('../models/Transaction');
 const moment = require('moment');
-const { v4 } = require('uuid');
 
 // @desc    Get all transactions
 // @route   GET /api/v1/transactions
@@ -15,12 +14,11 @@ exports.getTransactions = async (req, res, next) => {
       weeks
     });
 
-    let transactions = await db.find({
-      selector: { date: { $gte: start.toDate() } },
-      sort: ['date']
+    const transactions = await Transaction.find({
+      date: { $gte: start.toDate() }
     });
 
-    transactions = await transactions.docs;
+    await transactions.sort((a, b) => b.date - a.date);
 
     return res.status(200).json({
       success: true,
@@ -28,7 +26,6 @@ exports.getTransactions = async (req, res, next) => {
       data: transactions
     });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
       success: false,
       error: 'Server Error'
@@ -41,26 +38,13 @@ exports.getTransactions = async (req, res, next) => {
 // @access  Public
 exports.addTransaction = async (req, res, next) => {
   try {
-    const { text, amount, date } = req.body;
-    const newTransaction = {
-      _id: v4(),
-      text,
-      amount,
-      date: date || Date.now(),
-      createdAt: Date.now()
-    };
-
-    let transaction = await db.put(newTransaction);
-
-    // Pouch only returns the status, _id, and _rev, so query for the new document and return it
-    transaction = await db.get(transaction.id);
+    const transaction = await Transaction.create(req.body);
 
     return res.status(201).json({
       success: true,
       data: transaction
     });
   } catch (err) {
-    console.log(err);
     if (err.name === 'ValidationError') {
       const messages = Object.values(err.errors).map(val => val.message);
 
@@ -69,7 +53,6 @@ exports.addTransaction = async (req, res, next) => {
         error: messages
       });
     } else {
-      console.log(`${err}`.red);
       return res.status(500).json({
         success: false,
         error: 'Server Error'
@@ -83,7 +66,7 @@ exports.addTransaction = async (req, res, next) => {
 // @access  Public
 exports.deleteTransaction = async (req, res, next) => {
   try {
-    const transaction = await db.get(req.params.id);
+    const transaction = await Transaction.findById(req.params.id);
 
     if (!transaction) {
       return res.status(404).json({
@@ -92,14 +75,13 @@ exports.deleteTransaction = async (req, res, next) => {
       });
     }
 
-    await db.remove(transaction);
+    await transaction.remove();
 
     return res.status(200).json({
       success: true,
       data: {}
     });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
       success: false,
       error: 'Server Error'

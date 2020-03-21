@@ -9,6 +9,7 @@ export interface GlobalState {
   transactions: Transaction[];
   error: string | null;
   loading: boolean;
+  setLoading: () => void;
   getTransactions: (filter: DateFilter) => Promise<void> | null;
   addTransaction: (transaction: Transaction) => void;
   deleteTransaction: (id: string) => void;
@@ -20,6 +21,7 @@ export interface DateFilter {
 }
 
 export type Action =
+  | { type: 'LOADING' }
   | { type: 'GET_TRANSACTIONS'; payload: Transaction[] }
   | { type: 'DELETE_TRANSACTION'; payload: string }
   | { type: 'ADD_TRANSACTION'; payload: Transaction }

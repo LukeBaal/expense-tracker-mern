@@ -17,7 +17,10 @@
     "express": "^4.17.1",
     "moment": "^2.24.0",
     "mongoose": "^5.9.2",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "pouchdb": "^7.2.1",
+    "pouchdb-find": "^7.2.1",
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
