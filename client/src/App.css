@@ -126,8 +126,10 @@ select {
 }
 
 .btn:focus,
-.delete-btn:focus {
+.delete-btn:focus,
+.btn:hover {
   outline: 0;
+  background-color: rgba(133, 116, 218, 0.624);
 }
 
 .list {
